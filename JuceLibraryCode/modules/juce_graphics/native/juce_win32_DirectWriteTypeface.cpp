@@ -233,7 +233,13 @@ public:
 
     EdgeTable* getEdgeTableForGlyph (float fontHeight, int glyphNumber, const AffineTransform& transform)
     {
-        return getEdgeTableForGlyph (glyphNumber, transform);
+        Path path;
+
+        if (getOutlineForGlyph (fontHeight, glyphNumber, path) && ! path.isEmpty())
+            return new EdgeTable (path.getBoundsTransformed (transform).getSmallestIntegerContainer().expanded (1, 0),
+                                  path, transform);
+
+        return nullptr;
     }
 
     bool getOutlineForGlyph (int glyphNumber, Path& path)
@@ -253,7 +259,26 @@ public:
 
     bool getOutlineForGlyph (float fontHeight, int glyphNumber, Path& path)
     {
-        return getOutlineForGlyph (glyphNumber, path);
+        jassert (path.isEmpty());  // we might need to apply a transform to the path, so this must be empty
+        UINT16 glyphIndex = (UINT16) glyphNumber;
+        ComSmartPtr<PathGeometrySink> pathGeometrySink (new PathGeometrySink());
+
+        float emSizeFactor = getFontHeightToEmSizeFactor();
+        float emSize = fontHeight * emSizeFactor;
+        DWRITE_FONT_METRICS dwFontMetrics;
+        dwFontFace->GetMetrics (&dwFontMetrics);
+        const float pathAscent = (((float) dwFontMetrics.ascent) / ((float) designUnitsPerEm)) * emSize;
+        const float pathDescent = (((float) dwFontMetrics.descent) / ((float) designUnitsPerEm)) * emSize;
+        const float pathTotalSize = std::abs (pathAscent) + std::abs (pathDescent);
+        pathTransform = AffineTransform::identity.scale (1.0f / pathTotalSize, 1.0f / pathTotalSize);
+
+        dwFontFace->GetGlyphRunOutline (emSize, &glyphIndex, nullptr, nullptr, 1, false, false, pathGeometrySink);
+        path = pathGeometrySink->path;
+
+        if (! pathTransform.isIdentity())
+            path.applyTransform (pathTransform);
+
+        return true;
     }
 
     IDWriteFontFace* getIDWriteFontFace()
