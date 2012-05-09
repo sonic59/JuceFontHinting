@@ -246,6 +246,19 @@ public:
         return true;
     }
 
+    IDWriteFontFace* getIDWriteFontFace()
+    {
+        return dwFontFace;
+    }
+
+    float getFontHeightToEmSizeFactor()
+    {
+        DWRITE_FONT_METRICS dwFontMetrics;
+        dwFontFace->GetMetrics (&dwFontMetrics);
+        const float totalHeight = (float) (std::abs (dwFontMetrics.ascent) + std::abs (dwFontMetrics.descent));
+        return dwFontMetrics.designUnitsPerEm / totalHeight;
+    }
+
 private:
     ComSmartPtr<IDWriteFontFace> dwFontFace;
     float unitsToHeightScaleFactor, ascent;

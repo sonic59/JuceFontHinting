@@ -1246,9 +1246,9 @@ private:
                                L"", type, 0, 0, 0, 0, parentToAddTo, 0,
                                (HINSTANCE) Process::getCurrentModuleInstanceHandle(), 0);
 
-       #if JUCE_DIRECT2D
+       /*#if JUCE_DIRECT2D
         setCurrentRenderingEngine (1);
-       #endif
+       #endif*/
 
         if (hwnd != 0)
         {
