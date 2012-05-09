@@ -246,6 +246,11 @@ public:
         return true;
     }
 
+    bool getOutlineForGlyph (float fontHeight, int glyphNumber, Path& path)
+    {
+        return getOutlineForGlyph (glyphNumber, path);
+    }
+
     IDWriteFontFace* getIDWriteFontFace()
     {
         return dwFontFace;

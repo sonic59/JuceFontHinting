@@ -346,6 +346,11 @@ public:
         return true;
     }
 
+    bool getOutlineForGlyph (float fontHeight, int glyphNumber, Path& path)
+    {
+        return getOutlineForGlyph (glyphNumber, path);
+    }
+
 private:
     static const MAT2 identityMatrix;
     HFONT fontH;
