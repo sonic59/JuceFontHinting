@@ -85,3 +85,8 @@ EdgeTable* Typeface::getEdgeTableForGlyph (int glyphNumber, const AffineTransfor
 
     return nullptr;
 }
+
+EdgeTable* Typeface::getEdgeTableForGlyph (float fontHeight, int glyphNumber, const AffineTransform& transform)
+{
+    return getEdgeTableForGlyph (glyphNumber, transform);
+}

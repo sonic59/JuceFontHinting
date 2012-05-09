@@ -121,6 +121,8 @@ public:
     /** Returns a new EdgeTable that contains the path for the givem glyph, with the specified transform applied. */
     virtual EdgeTable* getEdgeTableForGlyph (int glyphNumber, const AffineTransform& transform);
 
+    virtual EdgeTable* getEdgeTableForGlyph (float fontHeight, int glyphNumber, const AffineTransform& transform);
+
     /** Returns true if the typeface uses hinting. */
     virtual bool isHinted() const                           { return false; }
 
