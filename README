@@ -1,1 +1,12 @@
 Adding Font Hinting to Juce
+
+Status: Complete
+Result: Failed
+
+The outlines returned from DirectWrite at the correct emSize are no different than the ones returned when using emSize of 1024.
+Explanation for this result can be found here:
+http://forums.create.msdn.com/forums/p/53902/327106.aspx
+"The geometry retrieved via GetGlyphRunOutline is never grid-fit. It is technically still 'hinted' (as all the hinting instructions are executed), but essentially at the font's em box size, rather than to a specific pixel resolution and em size. Grid-fitting to the nearest pixel/subpixel only applies to the raster modes."
+
+By the looks of the old Juce Win32 font code, it appear they are getting technically 'hinted' fonts as well. GGO_UNHINTED is never used. There doesn't seem to be a way to specify emSize with GetGlyphOutline.
+http://msdn.microsoft.com/en-us/library/dd144891(v=vs.85).aspx
